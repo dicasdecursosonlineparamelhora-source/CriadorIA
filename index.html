@@ -1,526 +1,951 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#101827">
-<link rel="manifest" href="manifest.json">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b14">
+
 <title>Criador IA</title>
 
 <style>
+
+*{
+box-sizing:border-box;
+}
+
 body{
-  margin:0;
-  background:#080d18;
-  color:#fff;
-  font-family:Arial,sans-serif
+margin:0;
+background:#080b14;
+color:#fff;
+font-family:Arial,Helvetica,sans-serif;
 }
 
-main{
-  max-width:700px;
-  margin:auto;
-  padding:22px 15px
+.app{
+max-width:900px;
+margin:auto;
+min-height:100vh;
+display:flex;
+flex-direction:column;
 }
 
-.top{
-  display:flex;
-  gap:12px;
-  align-items:center
+/* TOPO */
+
+header{
+height:70px;
+display:flex;
+align-items:center;
+padding:12px 18px;
+border-bottom:1px solid #20283b;
+background:#0b0f1b;
+position:sticky;
+top:0;
+z-index:10;
 }
 
 .logo{
-  width:48px;
-  height:48px;
-  border-radius:15px;
-  background:#765cff;
-  display:grid;
-  place-items:center;
-  font-size:25px
+width:44px;
+height:44px;
+border-radius:14px;
+background:linear-gradient(135deg,#765cff,#9b5cff);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:23px;
+margin-right:12px;
 }
 
-h1{
-  margin:0
+.title{
+font-size:20px;
+font-weight:bold;
 }
 
-.sub{
-  color:#98a5bd;
-  font-size:13px
+.subtitle{
+font-size:12px;
+color:#8994aa;
+margin-top:3px;
 }
 
-.card{
-  margin-top:20px;
-  background:#111a2b;
-  border:1px solid #273653;
-  border-radius:20px;
-  padding:15px
+/* CHAT */
+
+#chat{
+flex:1;
+padding:20px 15px 170px;
+}
+
+.welcome{
+text-align:center;
+padding:45px 15px;
+}
+
+.welcome .biglogo{
+font-size:50px;
+margin-bottom:12px;
+}
+
+.welcome h2{
+margin:0 0 8px;
+font-size:28px;
+}
+
+.welcome p{
+color:#8994aa;
+font-size:14px;
+}
+
+/* MENSAGENS */
+
+.message{
+display:flex;
+margin:16px 0;
+}
+
+.message.user{
+justify-content:flex-end;
+}
+
+.bubble{
+max-width:85%;
+padding:13px 16px;
+border-radius:18px;
+line-height:1.5;
+font-size:15px;
+}
+
+.user .bubble{
+background:#765cff;
+border-bottom-right-radius:5px;
+}
+
+.ai .bubble{
+background:#141b2b;
+border:1px solid #252f45;
+border-bottom-left-radius:5px;
+}
+
+/* RESULTADO */
+
+.creation{
+margin-top:12px;
+background:#0d1321;
+border:1px solid #2a3650;
+border-radius:20px;
+padding:15px;
+}
+
+.creation-title{
+font-weight:bold;
+font-size:15px;
+margin-bottom:12px;
+color:#dce4f5;
+}
+
+.creation-content{
+background:#080c16;
+border-radius:15px;
+overflow:hidden;
+min-height:80px;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.creation-content img{
+width:100%;
+display:block;
+max-height:650px;
+object-fit:contain;
+}
+
+.creation-content video{
+width:100%;
+max-height:650px;
+display:block;
+}
+
+.creation-content audio{
+width:100%;
+}
+
+.loading{
+padding:35px 15px;
+text-align:center;
+color:#9ba8bf;
+}
+
+.spinner{
+width:32px;
+height:32px;
+border:3px solid #303b55;
+border-top-color:#765cff;
+border-radius:50%;
+margin:0 auto 12px;
+animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+to{
+transform:rotate(360deg);
+}
+}
+
+.actions{
+display:flex;
+gap:8px;
+margin-top:10px;
+}
+
+.actions button{
+flex:1;
+}
+
+/* COMPOSER */
+
+.composer-area{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:linear-gradient(transparent,#080b14 18%);
+padding:25px 12px 14px;
+z-index:20;
+}
+
+.composer{
+max-width:900px;
+margin:auto;
+background:#111827;
+border:1px solid #303c55;
+border-radius:20px;
+padding:10px;
+box-shadow:0 -10px 30px rgba(0,0,0,.25);
 }
 
 textarea{
-  width:100%;
-  height:140px;
-  box-sizing:border-box;
-  background:#0a1120;
-  color:#fff;
-  border:1px solid #334260;
-  border-radius:15px;
-  padding:14px;
-  font-size:16px
+width:100%;
+height:65px;
+resize:none;
+border:0;
+outline:0;
+background:transparent;
+color:white;
+font-size:16px;
+padding:8px;
+font-family:Arial;
 }
 
-.row,.tools{
-  display:grid;
-  gap:9px;
-  margin-top:10px
+textarea::placeholder{
+color:#69758c;
 }
 
-.row{
-  grid-template-columns:1fr 1fr
-}
-
-.tools{
-  grid-template-columns:repeat(3,1fr)
+.composer-buttons{
+display:flex;
+align-items:center;
+gap:8px;
 }
 
 button{
-  background:#18243a;
-  color:#fff;
-  border:1px solid #34425f;
-  border-radius:13px;
-  padding:13px;
-  font-weight:bold
+border:1px solid #34415c;
+background:#182238;
+color:#fff;
+border-radius:12px;
+padding:10px 13px;
+font-weight:bold;
+cursor:pointer;
 }
 
-.primary{
-  width:100%;
-  margin-top:10px;
-  background:#765cff;
-  border:0
+button:hover{
+background:#222f49;
 }
 
-.attach{
-  margin-top:12px;
-  border:1px dashed #465779;
-  border-radius:13px;
-  padding:14px;
-  text-align:center
+.send{
+margin-left:auto;
+background:#765cff;
+border:0;
+font-size:17px;
 }
 
-.attach input{
-  display:none
+.send:hover{
+background:#674bea;
 }
 
-.attach span{
-  display:block;
-  color:#98a5bd;
-  font-size:12px;
-  margin-top:3px
+/* FERRAMENTAS */
+
+.tools{
+display:flex;
+gap:7px;
+overflow-x:auto;
+padding:10px 0 2px;
 }
 
-#preview{
-  display:none;
-  margin-top:12px;
-  border-radius:14px;
-  overflow:hidden
+.tools button{
+white-space:nowrap;
+font-size:12px;
+padding:9px 11px;
 }
 
-#preview img,
-#preview video{
-  width:100%;
-  max-height:280px;
-  object-fit:contain;
-  background:#050912
+.tools button.active{
+background:#765cff;
+border-color:#765cff;
 }
 
-#result{
-  margin-top:14px;
-  background:#0a1120;
-  border-radius:14px;
-  padding:13px;
-  color:#dce4f5;
-  line-height:1.5;
-  white-space:pre-wrap
+/* ARQUIVO */
+
+.file-preview{
+display:none;
+margin:8px 0;
+background:#0a0f1b;
+border-radius:12px;
+padding:8px;
 }
 
-#result img{
-  display:block;
-  width:100%;
-  max-height:600px;
-  object-fit:contain;
-  border-radius:14px;
-  margin-top:5px
+.file-preview img,
+.file-preview video{
+width:100%;
+max-height:160px;
+object-fit:contain;
+border-radius:9px;
 }
 
-.download{
-  display:block;
-  text-align:center;
-  text-decoration:none;
-  margin-top:10px;
-  background:#18243a;
-  color:#fff;
-  border:1px solid #34425f;
-  border-radius:13px;
-  padding:13px;
-  font-weight:bold
+/* RESPONSIVO */
+
+@media(max-width:600px){
+
+header{
+height:62px;
 }
 
-.note{
-  color:#98a5bd;
-  font-size:12px;
-  line-height:1.4
+.title{
+font-size:18px;
 }
+
+#chat{
+padding-left:10px;
+padding-right:10px;
+}
+
+.bubble{
+max-width:92%;
+}
+
+.welcome h2{
+font-size:24px;
+}
+
+}
+
 </style>
 </head>
 
 <body>
 
-<main>
+<div class="app">
 
-<div class="top">
-  <div class="logo">✨</div>
+<header>
 
-  <div>
-    <h1>Criador IA</h1>
-    <div class="sub">
-      Comandos, fotos e vídeos em um só lugar.
-    </div>
-  </div>
+<div class="logo">✨</div>
+
+<div>
+<div class="title">Criador IA</div>
+<div class="subtitle">Crie imagens, vídeos, textos e muito mais</div>
 </div>
 
-<div class="card">
+</header>
 
-<textarea
-id="cmd"
-placeholder="Ex.: Crie uma imagem de um carro vermelho..."
-></textarea>
 
-<div class="row">
-  <button id="mic">🎤 Falar</button>
-  <button id="clear">🗑️ Limpar</button>
-</div>
+<main id="chat">
 
-<div class="attach">
+<div class="welcome" id="welcome">
 
-<label for="media">
-  <b>📎 Escolher da galeria</b>
-  <span>Foto ou vídeo do celular</span>
-</label>
+<div class="biglogo">✨</div>
 
-<input
-id="media"
-type="file"
-accept="image/*,video/*"
->
+<h2>Como posso ajudar?</h2>
 
-</div>
-
-<div id="preview"></div>
-
-<button
-class="primary"
-id="go"
->
-✨ Executar comando
-</button>
-
-<div class="tools">
-
-<button data-type="imagem">
-🖼️ Imagem
-</button>
-
-<button data-type="vídeo">
-🎬 Vídeo
-</button>
-
-<button data-type="texto">
-✍️ Texto
-</button>
-
-<button data-type="áudio">
-🎵 Áudio
-</button>
-
-<button data-type="site">
-🌐 Site
-</button>
-
-<button data-type="aplicativo">
-📱 App
-</button>
-
-</div>
-
-<div id="result">
-Digite um comando e toque em Executar comando.
-</div>
-
-</div>
-
-<p class="note">
-V3: comandos, galeria, pré-visualização, voz e geração de imagens.
+<p>
+Digite o que você quer criar abaixo.
 </p>
+
+</div>
 
 </main>
 
+
+<div class="composer-area">
+
+<div class="composer">
+
+<div
+class="file-preview"
+id="filePreview">
+</div>
+
+
+<textarea
+id="prompt"
+placeholder="Diga o que você quer criar..."
+></textarea>
+
+
+<div class="tools">
+
+<button data-mode="chat">💬 Chat</button>
+
+<button data-mode="image">🖼️ Imagem</button>
+
+<button data-mode="video">🎬 Vídeo</button>
+
+<button data-mode="text">✍️ Texto</button>
+
+<button data-mode="audio">🎵 Áudio</button>
+
+</div>
+
+
+<div class="composer-buttons">
+
+<label>
+
+<button
+type="button"
+id="attach">
+📎
+</button>
+
+<input
+type="file"
+id="file"
+accept="image/*,video/*"
+style="display:none"
+>
+
+</label>
+
+
+<button
+type="button"
+id="mic">
+🎤
+</button>
+
+
+<button
+type="button"
+id="clear">
+🗑️
+</button>
+
+
+<button
+type="button"
+class="send"
+id="send">
+➤
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
 <script>
 
-const cmd =
-document.querySelector("#cmd");
+const promptInput =
+document.getElementById("prompt");
 
-const media =
-document.querySelector("#media");
+const chat =
+document.getElementById("chat");
 
-const preview =
-document.querySelector("#preview");
+const welcome =
+document.getElementById("welcome");
 
-const result =
-document.querySelector("#result");
+const file =
+document.getElementById("file");
 
+const filePreview =
+document.getElementById("filePreview");
 
-/* GALERIA */
+const send =
+document.getElementById("send");
 
-media.onchange = () => {
+const clear =
+document.getElementById("clear");
 
-  let f = media.files[0];
+const attach =
+document.getElementById("attach");
 
-  if(!f) return;
+const mic =
+document.getElementById("mic");
 
-  preview.style.display = "block";
+let currentMode = "chat";
 
-  preview.innerHTML = "";
+let selectedFile = null;
 
-  let u = URL.createObjectURL(f);
 
-  let x =
-    document.createElement(
-      f.type.startsWith("image/")
-      ? "img"
-      : "video"
-    );
-
-  x.src = u;
-
-  if(x.tagName === "VIDEO"){
-    x.controls = true;
-  }
-
-  preview.appendChild(x);
-
-  result.textContent =
-    "📎 Arquivo selecionado: " + f.name;
-};
-
-
-/* EXECUTAR COMANDO */
-
-document.querySelector("#go").onclick =
-async () => {
-
-  let q = cmd.value.trim();
-
-  if(!q){
-
-    result.textContent =
-      "Escreva o que você quer criar primeiro.";
-
-    return;
-  }
-
-
-  /* VERIFICA SE É PEDIDO DE IMAGEM */
-
-  let isImage =
-    q.toLowerCase().includes("imagem") ||
-    q.toLowerCase().includes("foto") ||
-    q.toLowerCase().includes("desenho") ||
-    q.toLowerCase().includes("crie uma imagem") ||
-    q.toLowerCase().includes("gere uma imagem");
-
-
-  if(isImage){
-
-    result.innerHTML =
-      "⏳ Criando sua imagem...";
-
-    try{
-
-      let prompt =
-        encodeURIComponent(q);
-
-      let imageUrl =
-        "https://image.pollinations.ai/prompt/"
-        + prompt
-        + "?width=1024&height=1024&nologo=true";
-
-
-      let img =
-        document.createElement("img");
-
-      img.src = imageUrl;
-
-      img.alt =
-        "Imagem criada pela IA";
-
-
-      img.onload = () => {
-
-        result.innerHTML = "";
-
-        result.appendChild(img);
-
-
-        let download =
-          document.createElement("a");
-
-        download.href = imageUrl;
-
-        download.target = "_blank";
-
-        download.download =
-          "criador-ia.png";
-
-        download.className =
-          "download";
-
-        download.textContent =
-          "⬇️ Abrir / salvar imagem";
-
-        result.appendChild(download);
-
-      };
-
-
-      img.onerror = () => {
-
-        result.textContent =
-          "❌ Não consegui gerar a imagem agora. Tente novamente.";
-
-      };
-
-
-    }catch(error){
-
-      console.error(error);
-
-      result.textContent =
-        "❌ Ocorreu um erro ao criar a imagem.";
-
-    }
-
-    return;
-  }
-
-
-  /* OUTROS COMANDOS */
-
-  result.textContent =
-    "🤖 Comando recebido:\n\n"
-    + q
-    + "\n\n"
-    + "Esta função ainda será conectada à IA.";
-
-
-};
-
-
-/* BOTÕES DE TIPO */
+/* ESCOLHER MODO */
 
 document
 .querySelectorAll(".tools button")
-.forEach(b => {
+.forEach(button => {
 
-  b.onclick = () => {
+button.onclick = () => {
 
-    let tipo =
-      b.dataset.type;
+document
+.querySelectorAll(".tools button")
+.forEach(b =>
+b.classList.remove("active")
+);
 
-    if(tipo === "imagem"){
+button.classList.add("active");
 
-      cmd.value =
-        "Crie uma imagem de ";
+currentMode =
+button.dataset.mode;
 
-    }else{
+const names = {
 
-      cmd.value =
-        "Crie "
-        + tipo
-        + " de ";
+chat:
+"Digite sua pergunta...",
 
-    }
+image:
+"Descreva a imagem que você quer criar...",
 
-    cmd.focus();
+video:
+"Descreva o vídeo que você quer criar...",
 
-  };
+text:
+"Digite o texto que você quer criar...",
+
+audio:
+"Digite o áudio que você quer criar..."
+
+};
+
+promptInput.placeholder =
+names[currentMode];
+
+promptInput.focus();
+
+};
+
+});
+
+
+/* ANEXAR */
+
+attach.onclick = () => {
+
+file.click();
+
+};
+
+
+file.onchange = () => {
+
+const f =
+file.files[0];
+
+if(!f)
+return;
+
+selectedFile = f;
+
+filePreview.style.display =
+"block";
+
+filePreview.innerHTML = "";
+
+const url =
+URL.createObjectURL(f);
+
+if(f.type.startsWith("image/")){
+
+const img =
+document.createElement("img");
+
+img.src = url;
+
+filePreview.appendChild(img);
+
+}else if(f.type.startsWith("video/")){
+
+const video =
+document.createElement("video");
+
+video.src = url;
+
+video.controls = true;
+
+filePreview.appendChild(video);
+
+}
+
+};
+
+
+/* ADICIONAR MENSAGEM */
+
+function addUserMessage(text){
+
+welcome.style.display =
+"none";
+
+const message =
+document.createElement("div");
+
+message.className =
+"message user";
+
+message.innerHTML =
+`<div class="bubble">${escapeHtml(text)}</div>`;
+
+chat.appendChild(message);
+
+scrollBottom();
+
+}
+
+
+/* RESPOSTA IA */
+
+function addAIMessage(text){
+
+const message =
+document.createElement("div");
+
+message.className =
+"message ai";
+
+message.innerHTML =
+`<div class="bubble">${escapeHtml(text)}</div>`;
+
+chat.appendChild(message);
+
+scrollBottom();
+
+}
+
+
+/* RESULTADO */
+
+function createResult(){
+
+const message =
+document.createElement("div");
+
+message.className =
+"message ai";
+
+const bubble =
+document.createElement("div");
+
+bubble.className =
+"bubble";
+
+const creation =
+document.createElement("div");
+
+creation.className =
+"creation";
+
+creation.innerHTML = `
+
+<div class="creation-title">
+✨ Resultado da criação
+</div>
+
+<div class="creation-content">
+
+<div class="loading">
+
+<div class="spinner"></div>
+
+<div>Gerando sua criação...</div>
+
+</div>
+
+</div>
+
+`;
+
+bubble.appendChild(creation);
+
+message.appendChild(bubble);
+
+chat.appendChild(message);
+
+scrollBottom();
+
+return creation;
+
+}
+
+
+/* ESCAPE */
+
+function escapeHtml(text){
+
+const div =
+document.createElement("div");
+
+div.textContent =
+text;
+
+return div.innerHTML;
+
+}
+
+
+/* ROLAR */
+
+function scrollBottom(){
+
+setTimeout(() => {
+
+window.scrollTo({
+
+top:document.body.scrollHeight,
+
+behavior:"smooth"
+
+});
+
+},50);
+
+}
+
+
+/* EXECUTAR */
+
+send.onclick =
+async () => {
+
+const text =
+promptInput.value.trim();
+
+if(!text){
+
+promptInput.focus();
+
+return;
+
+}
+
+addUserMessage(text);
+
+promptInput.value = "";
+
+
+/*
+ATENÇÃO:
+
+AQUI É ONDE VAI ENTRAR
+A CONEXÃO REAL COM A API.
+
+A INTERFACE JÁ POSSUI O
+ESPAÇO REAL PARA MOSTRAR
+IMAGEM, VÍDEO, ÁUDIO OU TEXTO.
+*/
+
+if(currentMode === "image"){
+
+const result =
+createResult();
+
+const content =
+result.querySelector(
+".creation-content"
+);
+
+content.innerHTML = `
+
+<div class="loading">
+
+<div class="spinner"></div>
+
+<div>
+Preparando geração da imagem...
+</div>
+
+</div>
+
+`;
+
+
+/*
+A conexão segura com a API
+será adicionada aqui.
+*/
+
+setTimeout(() => {
+
+content.innerHTML = `
+
+<div class="loading">
+
+<div>⚙️</div>
+
+<div>
+A conexão da IA ainda precisa
+ser autorizada neste aplicativo.
+</div>
+
+</div>
+
+`;
+
+},1000);
+
+return;
+
+}
+
+
+if(currentMode === "video"){
+
+const result =
+createResult();
+
+const content =
+result.querySelector(
+".creation-content"
+);
+
+content.innerHTML = `
+
+<div class="loading">
+
+<div class="spinner"></div>
+
+<div>
+Preparando geração do vídeo...
+</div>
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+if(currentMode === "audio"){
+
+const result =
+createResult();
+
+const content =
+result.querySelector(
+".creation-content"
+);
+
+content.innerHTML = `
+
+<div class="loading">
+
+<div class="spinner"></div>
+
+<div>
+Preparando geração do áudio...
+</div>
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+/* CHAT/TEXTO */
+
+addAIMessage(
+"Recebi seu comando. A conexão com o modelo de IA será usada aqui."
+);
+
+};
+
+
+/* ENTER */
+
+promptInput.addEventListener(
+"keydown",
+e => {
+
+if(e.key === "Enter" && !e.shiftKey){
+
+e.preventDefault();
+
+send.click();
+
+}
 
 });
 
 
 /* LIMPAR */
 
-document.querySelector("#clear")
-.onclick = () => {
+clear.onclick = () => {
 
-  cmd.value = "";
+promptInput.value = "";
 
-  media.value = "";
+file.value = "";
 
-  preview.style.display =
-    "none";
+selectedFile = null;
 
-  preview.innerHTML = "";
+filePreview.style.display =
+"none";
 
-  result.textContent =
-    "Digite um comando e toque em Executar comando.";
+filePreview.innerHTML = "";
+
+chat.innerHTML = "";
+
+chat.appendChild(welcome);
+
+welcome.style.display =
+"block";
 
 };
 
 
 /* MICROFONE */
 
-document.querySelector("#mic")
-.onclick = () => {
+mic.onclick = () => {
 
-  let R =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
+const Recognition =
+window.SpeechRecognition ||
+window.webkitSpeechRecognition;
 
+if(!Recognition){
 
-  if(!R){
+alert(
+"Seu navegador não oferece reconhecimento de voz."
+);
 
-    result.textContent =
-      "Reconhecimento de voz não disponível neste navegador.";
+return;
 
-    return;
+}
 
-  }
+const recognition =
+new Recognition();
 
+recognition.lang =
+"pt-BR";
 
-  let r =
-    new R();
+recognition.start();
 
-  r.lang =
-    "pt-BR";
+recognition.onresult =
+event => {
 
-  r.onresult =
-    e => {
-
-      cmd.value =
-        e.results[0][0].transcript;
-
-    };
-
-  r.start();
+promptInput.value =
+event.results[0][0].transcript;
 
 };
 
-
-/* SERVICE WORKER */
-
-if("serviceWorker" in navigator){
-
-  navigator.serviceWorker
-    .register("sw.js");
-
-}
+};
 
 </script>
 
