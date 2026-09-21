@@ -1,18 +1,528 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101827"><link rel="manifest" href="manifest.json"><title>Criador IA</title><style>
-body{margin:0;background:#080d18;color:#fff;font-family:Arial,sans-serif}main{max-width:700px;margin:auto;padding:22px 15px}.top{display:flex;gap:12px;align-items:center}.logo{width:48px;height:48px;border-radius:15px;background:#765cff;display:grid;place-items:center;font-size:25px}h1{margin:0}.sub{color:#98a5bd;font-size:13px}.card{margin-top:20px;background:#111a2b;border:1px solid #273653;border-radius:20px;padding:15px}textarea{width:100%;height:140px;box-sizing:border-box;background:#0a1120;color:#fff;border:1px solid #334260;border-radius:15px;padding:14px;font-size:16px}.row,.tools{display:grid;gap:9px;margin-top:10px}.row{grid-template-columns:1fr 1fr}.tools{grid-template-columns:repeat(3,1fr)}button{background:#18243a;color:#fff;border:1px solid #34425f;border-radius:13px;padding:13px;font-weight:bold}.primary{width:100%;margin-top:10px;background:#765cff;border:0}.attach{margin-top:12px;border:1px dashed #465779;border-radius:13px;padding:14px;text-align:center}.attach input{display:none}.attach span{display:block;color:#98a5bd;font-size:12px;margin-top:3px}#preview{display:none;margin-top:12px;border-radius:14px;overflow:hidden}#preview img,#preview video{width:100%;max-height:280px;object-fit:contain;background:#050912}#result{margin-top:14px;background:#0a1120;border-radius:14px;padding:13px;color:#dce4f5;line-height:1.5;white-space:pre-wrap}.note{color:#98a5bd;font-size:12px;line-height:1.4}</style></head>
-<body><main><div class="top"><div class="logo">✨</div><div><h1>Criador IA</h1><div class="sub">Comandos, fotos e vídeos em um só lugar.</div></div></div>
-<div class="card"><textarea id="cmd" placeholder="Ex.: Crie uma propaganda usando esta foto..."></textarea>
-<div class="row"><button id="mic">🎤 Falar</button><button id="clear">🗑️ Limpar</button></div>
-<div class="attach"><label for="media"><b>📎 Escolher da galeria</b><span>Foto ou vídeo do celular</span></label><input id="media" type="file" accept="image/*,video/*"></div>
-<div id="preview"></div><button class="primary" id="go">✨ Executar comando</button>
-<div class="tools"><button data-type="imagem">🖼️ Imagem</button><button data-type="vídeo">🎬 Vídeo</button><button data-type="texto">✍️ Texto</button><button data-type="áudio">🎵 Áudio</button><button data-type="site">🌐 Site</button><button data-type="aplicativo">📱 App</button></div>
-<div id="result">Digite um comando e toque em Executar comando.</div></div><p class="note">V2: seleção de foto/vídeo, pré-visualização, voz e comandos funcionam. A geração real por IA ainda precisa de APIs conectadas.</p></main>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101827">
+<link rel="manifest" href="manifest.json">
+<title>Criador IA</title>
+
+<style>
+body{
+  margin:0;
+  background:#080d18;
+  color:#fff;
+  font-family:Arial,sans-serif
+}
+
+main{
+  max-width:700px;
+  margin:auto;
+  padding:22px 15px
+}
+
+.top{
+  display:flex;
+  gap:12px;
+  align-items:center
+}
+
+.logo{
+  width:48px;
+  height:48px;
+  border-radius:15px;
+  background:#765cff;
+  display:grid;
+  place-items:center;
+  font-size:25px
+}
+
+h1{
+  margin:0
+}
+
+.sub{
+  color:#98a5bd;
+  font-size:13px
+}
+
+.card{
+  margin-top:20px;
+  background:#111a2b;
+  border:1px solid #273653;
+  border-radius:20px;
+  padding:15px
+}
+
+textarea{
+  width:100%;
+  height:140px;
+  box-sizing:border-box;
+  background:#0a1120;
+  color:#fff;
+  border:1px solid #334260;
+  border-radius:15px;
+  padding:14px;
+  font-size:16px
+}
+
+.row,.tools{
+  display:grid;
+  gap:9px;
+  margin-top:10px
+}
+
+.row{
+  grid-template-columns:1fr 1fr
+}
+
+.tools{
+  grid-template-columns:repeat(3,1fr)
+}
+
+button{
+  background:#18243a;
+  color:#fff;
+  border:1px solid #34425f;
+  border-radius:13px;
+  padding:13px;
+  font-weight:bold
+}
+
+.primary{
+  width:100%;
+  margin-top:10px;
+  background:#765cff;
+  border:0
+}
+
+.attach{
+  margin-top:12px;
+  border:1px dashed #465779;
+  border-radius:13px;
+  padding:14px;
+  text-align:center
+}
+
+.attach input{
+  display:none
+}
+
+.attach span{
+  display:block;
+  color:#98a5bd;
+  font-size:12px;
+  margin-top:3px
+}
+
+#preview{
+  display:none;
+  margin-top:12px;
+  border-radius:14px;
+  overflow:hidden
+}
+
+#preview img,
+#preview video{
+  width:100%;
+  max-height:280px;
+  object-fit:contain;
+  background:#050912
+}
+
+#result{
+  margin-top:14px;
+  background:#0a1120;
+  border-radius:14px;
+  padding:13px;
+  color:#dce4f5;
+  line-height:1.5;
+  white-space:pre-wrap
+}
+
+#result img{
+  display:block;
+  width:100%;
+  max-height:600px;
+  object-fit:contain;
+  border-radius:14px;
+  margin-top:5px
+}
+
+.download{
+  display:block;
+  text-align:center;
+  text-decoration:none;
+  margin-top:10px;
+  background:#18243a;
+  color:#fff;
+  border:1px solid #34425f;
+  border-radius:13px;
+  padding:13px;
+  font-weight:bold
+}
+
+.note{
+  color:#98a5bd;
+  font-size:12px;
+  line-height:1.4
+}
+</style>
+</head>
+
+<body>
+
+<main>
+
+<div class="top">
+  <div class="logo">✨</div>
+
+  <div>
+    <h1>Criador IA</h1>
+    <div class="sub">
+      Comandos, fotos e vídeos em um só lugar.
+    </div>
+  </div>
+</div>
+
+<div class="card">
+
+<textarea
+id="cmd"
+placeholder="Ex.: Crie uma imagem de um carro vermelho..."
+></textarea>
+
+<div class="row">
+  <button id="mic">🎤 Falar</button>
+  <button id="clear">🗑️ Limpar</button>
+</div>
+
+<div class="attach">
+
+<label for="media">
+  <b>📎 Escolher da galeria</b>
+  <span>Foto ou vídeo do celular</span>
+</label>
+
+<input
+id="media"
+type="file"
+accept="image/*,video/*"
+>
+
+</div>
+
+<div id="preview"></div>
+
+<button
+class="primary"
+id="go"
+>
+✨ Executar comando
+</button>
+
+<div class="tools">
+
+<button data-type="imagem">
+🖼️ Imagem
+</button>
+
+<button data-type="vídeo">
+🎬 Vídeo
+</button>
+
+<button data-type="texto">
+✍️ Texto
+</button>
+
+<button data-type="áudio">
+🎵 Áudio
+</button>
+
+<button data-type="site">
+🌐 Site
+</button>
+
+<button data-type="aplicativo">
+📱 App
+</button>
+
+</div>
+
+<div id="result">
+Digite um comando e toque em Executar comando.
+</div>
+
+</div>
+
+<p class="note">
+V3: comandos, galeria, pré-visualização, voz e geração de imagens.
+</p>
+
+</main>
+
 <script>
-const cmd=document.querySelector("#cmd"),media=document.querySelector("#media"),preview=document.querySelector("#preview"),result=document.querySelector("#result");
-media.onchange=()=>{let f=media.files[0];if(!f)return;preview.style.display="block";preview.innerHTML="";let u=URL.createObjectURL(f);let x=document.createElement(f.type.startsWith("image/")?"img":"video");x.src=u;if(x.tagName==="VIDEO")x.controls=true;preview.appendChild(x);result.textContent="Arquivo selecionado: "+f.name};
-document.querySelector("#go").onclick=()=>{let q=cmd.value.trim();if(!q){result.textContent="Escreva o que você quer criar primeiro.";return}result.textContent="Comando recebido:\n\n"+q+(media.files[0]?"\n\n📎 Arquivo: "+media.files[0].name:"")+"\n\nA interface está pronta para conectar o modelo de IA."};
-document.querySelectorAll(".tools button").forEach(b=>b.onclick=()=>{cmd.value="Crie "+b.dataset.type+" ";cmd.focus()});
-document.querySelector("#clear").onclick=()=>{cmd.value="";media.value="";preview.style.display="none";preview.innerHTML="";result.textContent="Digite um comando e toque em Executar comando."};
-document.querySelector("#mic").onclick=()=>{let R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R){result.textContent="Reconhecimento de voz não disponível neste navegador.";return}let r=new R();r.lang="pt-BR";r.onresult=e=>cmd.value=e.results[0][0].transcript;r.start()};
-if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js");
-</script></body></html>
+
+const cmd =
+document.querySelector("#cmd");
+
+const media =
+document.querySelector("#media");
+
+const preview =
+document.querySelector("#preview");
+
+const result =
+document.querySelector("#result");
+
+
+/* GALERIA */
+
+media.onchange = () => {
+
+  let f = media.files[0];
+
+  if(!f) return;
+
+  preview.style.display = "block";
+
+  preview.innerHTML = "";
+
+  let u = URL.createObjectURL(f);
+
+  let x =
+    document.createElement(
+      f.type.startsWith("image/")
+      ? "img"
+      : "video"
+    );
+
+  x.src = u;
+
+  if(x.tagName === "VIDEO"){
+    x.controls = true;
+  }
+
+  preview.appendChild(x);
+
+  result.textContent =
+    "📎 Arquivo selecionado: " + f.name;
+};
+
+
+/* EXECUTAR COMANDO */
+
+document.querySelector("#go").onclick =
+async () => {
+
+  let q = cmd.value.trim();
+
+  if(!q){
+
+    result.textContent =
+      "Escreva o que você quer criar primeiro.";
+
+    return;
+  }
+
+
+  /* VERIFICA SE É PEDIDO DE IMAGEM */
+
+  let isImage =
+    q.toLowerCase().includes("imagem") ||
+    q.toLowerCase().includes("foto") ||
+    q.toLowerCase().includes("desenho") ||
+    q.toLowerCase().includes("crie uma imagem") ||
+    q.toLowerCase().includes("gere uma imagem");
+
+
+  if(isImage){
+
+    result.innerHTML =
+      "⏳ Criando sua imagem...";
+
+    try{
+
+      let prompt =
+        encodeURIComponent(q);
+
+      let imageUrl =
+        "https://image.pollinations.ai/prompt/"
+        + prompt
+        + "?width=1024&height=1024&nologo=true";
+
+
+      let img =
+        document.createElement("img");
+
+      img.src = imageUrl;
+
+      img.alt =
+        "Imagem criada pela IA";
+
+
+      img.onload = () => {
+
+        result.innerHTML = "";
+
+        result.appendChild(img);
+
+
+        let download =
+          document.createElement("a");
+
+        download.href = imageUrl;
+
+        download.target = "_blank";
+
+        download.download =
+          "criador-ia.png";
+
+        download.className =
+          "download";
+
+        download.textContent =
+          "⬇️ Abrir / salvar imagem";
+
+        result.appendChild(download);
+
+      };
+
+
+      img.onerror = () => {
+
+        result.textContent =
+          "❌ Não consegui gerar a imagem agora. Tente novamente.";
+
+      };
+
+
+    }catch(error){
+
+      console.error(error);
+
+      result.textContent =
+        "❌ Ocorreu um erro ao criar a imagem.";
+
+    }
+
+    return;
+  }
+
+
+  /* OUTROS COMANDOS */
+
+  result.textContent =
+    "🤖 Comando recebido:\n\n"
+    + q
+    + "\n\n"
+    + "Esta função ainda será conectada à IA.";
+
+
+};
+
+
+/* BOTÕES DE TIPO */
+
+document
+.querySelectorAll(".tools button")
+.forEach(b => {
+
+  b.onclick = () => {
+
+    let tipo =
+      b.dataset.type;
+
+    if(tipo === "imagem"){
+
+      cmd.value =
+        "Crie uma imagem de ";
+
+    }else{
+
+      cmd.value =
+        "Crie "
+        + tipo
+        + " de ";
+
+    }
+
+    cmd.focus();
+
+  };
+
+});
+
+
+/* LIMPAR */
+
+document.querySelector("#clear")
+.onclick = () => {
+
+  cmd.value = "";
+
+  media.value = "";
+
+  preview.style.display =
+    "none";
+
+  preview.innerHTML = "";
+
+  result.textContent =
+    "Digite um comando e toque em Executar comando.";
+
+};
+
+
+/* MICROFONE */
+
+document.querySelector("#mic")
+.onclick = () => {
+
+  let R =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+
+  if(!R){
+
+    result.textContent =
+      "Reconhecimento de voz não disponível neste navegador.";
+
+    return;
+
+  }
+
+
+  let r =
+    new R();
+
+  r.lang =
+    "pt-BR";
+
+  r.onresult =
+    e => {
+
+      cmd.value =
+        e.results[0][0].transcript;
+
+    };
+
+  r.start();
+
+};
+
+
+/* SERVICE WORKER */
+
+if("serviceWorker" in navigator){
+
+  navigator.serviceWorker
+    .register("sw.js");
+
+}
+
+</script>
+
+</body>
+</html>
