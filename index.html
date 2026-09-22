@@ -3,1462 +3,771 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#080b14">
+<meta name="theme-color" content="#765cff">
+<meta name="description" content="Criador IA - transforme suas ideias em comandos profissionais">
+
+<link rel="manifest" href="manifest.json">
 
 <title>Criador IA</title>
 
 <style>
-
 *{
-box-sizing:border-box;
+  box-sizing:border-box;
 }
 
 body{
-margin:0;
-background:#080b14;
-color:#fff;
-font-family:Arial,Helvetica,sans-serif;
-}
-
-.app{
-max-width:900px;
-margin:auto;
-min-height:100vh;
-display:flex;
-flex-direction:column;
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#080d18;
+  color:#fff;
 }
 
 header{
-height:70px;
-display:flex;
-align-items:center;
-padding:12px 18px;
-border-bottom:1px solid #20283b;
-background:#0b0f1b;
-position:sticky;
-top:0;
-z-index:10;
+  background:#111a2e;
+  padding:20px 15px;
+  text-align:center;
+  border-bottom:1px solid #293653;
 }
 
-.logo{
-width:44px;
-height:44px;
-border-radius:14px;
-background:linear-gradient(135deg,#765cff,#9b5cff);
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:23px;
-margin-right:12px;
+header h1{
+  margin:0;
+  font-size:25px;
+}
+
+header p{
+  margin:7px 0 0;
+  color:#aeb9d1;
+  font-size:13px;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:15px;
+}
+
+.card{
+  background:#111a2e;
+  border:1px solid #293653;
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:15px;
 }
 
 .title{
-font-size:20px;
-font-weight:bold;
+  font-size:18px;
+  font-weight:bold;
+  margin-bottom:14px;
 }
 
-.subtitle{
-font-size:12px;
-color:#8994aa;
-margin-top:3px;
+.modes{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
 }
 
-.status{
-margin-left:auto;
-font-size:12px;
-color:#ffb84d;
+.mode{
+  background:#1a2742;
+  border:1px solid #30405f;
+  color:#fff;
+  padding:14px 5px;
+  border-radius:12px;
+  font-size:14px;
 }
 
-#chat{
-padding:20px 15px 190px;
-}
-
-.welcome{
-text-align:center;
-padding:45px 15px;
-}
-
-.biglogo{
-font-size:50px;
-}
-
-.welcome h2{
-font-size:28px;
-margin:12px 0 8px;
-}
-
-.welcome p{
-color:#8994aa;
-}
-
-.message{
-display:flex;
-margin:16px 0;
-}
-
-.message.user{
-justify-content:flex-end;
-}
-
-.bubble{
-max-width:88%;
-padding:13px 16px;
-border-radius:18px;
-line-height:1.5;
-font-size:15px;
-}
-
-.user .bubble{
-background:#765cff;
-border-bottom-right-radius:5px;
-}
-
-.ai .bubble{
-background:#141b2b;
-border:1px solid #252f45;
-border-bottom-left-radius:5px;
-}
-
-.creation{
-margin-top:10px;
-background:#0d1321;
-border:1px solid #2a3650;
-border-radius:18px;
-padding:12px;
-}
-
-.creation-title{
-font-weight:bold;
-margin-bottom:10px;
-}
-
-.creation-content{
-background:#070b13;
-border-radius:14px;
-overflow:hidden;
-min-height:100px;
-display:flex;
-align-items:center;
-justify-content:center;
-}
-
-.creation-content img{
-width:100%;
-max-height:650px;
-object-fit:contain;
-display:block;
-}
-
-.creation-content video{
-width:100%;
-max-height:650px;
-display:block;
-}
-
-.creation-content audio{
-width:100%;
-}
-
-.loading{
-padding:35px 15px;
-text-align:center;
-color:#9ba8bf;
-}
-
-.spinner{
-width:32px;
-height:32px;
-border:3px solid #303b55;
-border-top-color:#765cff;
-border-radius:50%;
-margin:0 auto 12px;
-animation:spin 1s linear infinite;
-}
-
-@keyframes spin{
-to{
-transform:rotate(360deg);
-}
-}
-
-.actions{
-display:flex;
-gap:8px;
-margin-top:10px;
-}
-
-.actions a,
-.actions button{
-flex:1;
-text-align:center;
-text-decoration:none;
-}
-
-button{
-border:1px solid #34415c;
-background:#182238;
-color:#fff;
-border-radius:12px;
-padding:10px 13px;
-font-weight:bold;
-cursor:pointer;
-}
-
-button:hover{
-background:#222f49;
-}
-
-.send{
-margin-left:auto;
-background:#765cff;
-border:0;
-font-size:17px;
-}
-
-.tools{
-display:flex;
-gap:7px;
-overflow-x:auto;
-padding:10px 0 2px;
-}
-
-.tools button{
-white-space:nowrap;
-font-size:12px;
-padding:9px 11px;
-}
-
-.tools button.active{
-background:#765cff;
-border-color:#765cff;
-}
-
-.composer-area{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-background:linear-gradient(transparent,#080b14 20%);
-padding:25px 12px 14px;
-z-index:20;
-}
-
-.composer{
-max-width:900px;
-margin:auto;
-background:#111827;
-border:1px solid #303c55;
-border-radius:20px;
-padding:10px;
+.mode.active{
+  background:#765cff;
+  border-color:#765cff;
 }
 
 textarea{
-width:100%;
-height:65px;
-resize:none;
-border:0;
-outline:0;
-background:transparent;
-color:white;
-font-size:16px;
-padding:8px;
-font-family:Arial;
+  width:100%;
+  min-height:160px;
+  resize:vertical;
+  background:#080e1c;
+  color:#fff;
+  border:1px solid #344362;
+  border-radius:14px;
+  padding:15px;
+  font-size:16px;
+  outline:none;
 }
 
-textarea::placeholder{
-color:#69758c;
+textarea:focus{
+  border-color:#765cff;
 }
 
-.composer-buttons{
-display:flex;
-gap:8px;
-align-items:center;
+input[type="file"]{
+  width:100%;
+  background:#080e1c;
+  color:#fff;
+  border:1px solid #344362;
+  border-radius:12px;
+  padding:13px;
+  font-size:14px;
 }
 
-.file-preview{
-display:none;
-margin:8px 0;
-background:#0a0f1b;
-border-radius:12px;
-padding:8px;
+.buttons{
+  display:flex;
+  gap:10px;
+  margin-top:12px;
 }
 
-.file-preview img,
-.file-preview video{
-width:100%;
-max-height:160px;
-object-fit:contain;
-border-radius:9px;
+button{
+  cursor:pointer;
+  border:0;
+  color:#fff;
 }
 
-#connect{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.75);
-display:none;
-align-items:center;
-justify-content:center;
-z-index:100;
-padding:20px;
+.generate{
+  flex:1;
+  background:#765cff;
+  padding:14px;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:bold;
 }
 
-.modal{
-background:#111827;
-border:1px solid #34415c;
-border-radius:22px;
-padding:25px;
-max-width:420px;
-width:100%;
-text-align:center;
+.clear{
+  background:#26334e;
+  padding:14px;
+  border-radius:12px;
+  font-size:16px;
 }
 
-.modal h2{
-margin-top:0;
+.result{
+  background:#080e1c;
+  border:1px solid #344362;
+  border-radius:14px;
+  padding:15px;
+  min-height:200px;
+  white-space:pre-wrap;
+  line-height:1.5;
+  color:#dce4f5;
+  overflow-wrap:anywhere;
 }
 
-.modal p{
-color:#9ba8bf;
-line-height:1.5;
+.result.empty{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#73809b;
+  text-align:center;
 }
 
-.connectButton{
-width:100%;
-background:#765cff;
-border:0;
-margin-top:10px;
+.copy{
+  width:100%;
+  background:#1d8f62;
+  padding:13px;
+  border-radius:12px;
+  margin-top:10px;
+  font-size:15px;
+  font-weight:bold;
 }
 
-.closeButton{
-width:100%;
-margin-top:8px;
+.info{
+  font-size:13px;
+  color:#9daac3;
+  line-height:1.5;
+  margin-top:10px;
+}
+
+.photo-box{
+  margin-top:12px;
+}
+
+#preview{
+  display:none;
+  margin-top:10px;
+  width:100%;
+  max-height:250px;
+  object-fit:contain;
+  border-radius:12px;
+  background:#080e1c;
+}
+
+.badge{
+  display:inline-block;
+  background:#1d2944;
+  padding:5px 9px;
+  border-radius:8px;
+  font-size:12px;
+  margin-bottom:10px;
+}
+
+.install{
+  display:none;
+  width:100%;
+  background:#d86cff;
+  padding:13px;
+  border-radius:12px;
+  margin-top:10px;
+  font-size:15px;
+  font-weight:bold;
+}
+
+.status{
+  text-align:center;
+  color:#71809d;
+  font-size:12px;
+  margin-top:15px;
 }
 
 @media(max-width:600px){
 
-header{
-height:62px;
-}
+  .modes{
+    grid-template-columns:repeat(2,1fr);
+  }
 
-.title{
-font-size:18px;
-}
+  .buttons{
+    flex-direction:column;
+  }
 
-#chat{
-padding-left:10px;
-padding-right:10px;
+  .generate,
+  .clear{
+    width:100%;
+  }
 }
-
-.bubble{
-max-width:94%;
-}
-
-}
-
 </style>
 </head>
 
 <body>
 
-<div class="app">
-
 <header>
-
-<div class="logo">✨</div>
-
-<div>
-<div class="title">Criador IA</div>
-<div class="subtitle">
-Crie imagens, vídeos, textos e muito mais
-</div>
-</div>
-
-<div
-class="status"
-id="status">
-🔴 Desconectado
-</div>
-
+  <h1>✨ Criador IA</h1>
+  <p>Transforme sua ideia em um comando profissional</p>
 </header>
 
+<div class="container">
 
-<main id="chat">
+  <div class="card">
 
-<div
-class="welcome"
-id="welcome">
+    <div class="title">
+      1️⃣ O que você quer criar?
+    </div>
 
-<div class="biglogo">✨</div>
+    <div class="modes">
 
-<h2>Como posso ajudar?</h2>
+      <button class="mode active" data-mode="imagem">
+        🖼️ Imagem
+      </button>
 
-<p>
-Conecte sua IA e diga o que você quer criar.
-</p>
+      <button class="mode" data-mode="foto">
+        📸 Foto
+      </button>
 
-<button
-onclick="openConnect()">
-🔐 Conectar IA
-</button>
+      <button class="mode" data-mode="video">
+        🎬 Vídeo
+      </button>
 
-</div>
+      <button class="mode" data-mode="texto">
+        📝 Texto
+      </button>
 
-</main>
+      <button class="mode" data-mode="audio">
+        🎵 Áudio
+      </button>
 
+      <button class="mode" data-mode="logo">
+        🎨 Logo
+      </button>
 
-<div class="composer-area">
+    </div>
 
-<div class="composer">
-
-<div
-class="file-preview"
-id="filePreview">
-</div>
-
-<textarea
-id="prompt"
-placeholder="Diga o que você quer criar..."
-></textarea>
-
-<div class="tools">
-
-<button data-mode="chat">💬 Chat</button>
-
-<button data-mode="image">🖼️ Imagem</button>
-
-<button data-mode="video">🎬 Vídeo</button>
-
-<button data-mode="text">✍️ Texto</button>
-
-<button data-mode="audio">🎵 Áudio</button>
-
-</div>
-
-<div class="composer-buttons">
-
-<button id="attach">📎</button>
-
-<input
-type="file"
-id="file"
-accept="image/*,video/*"
-style="display:none"
->
-
-<button id="mic">🎤</button>
-
-<button id="clear">🗑️</button>
-
-<button
-class="send"
-id="send">
-➤
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
+  </div>
 
 
-<div id="connect">
+  <div class="card">
 
-<div class="modal">
+    <div class="title">
+      2️⃣ Descreva o que você quer criar
+    </div>
 
-<h2>🔐 Conectar IA</h2>
+    <textarea
+      id="idea"
+      placeholder="Exemplo: quero uma imagem de um homem jogando Street Fighter 6 em um quarto gamer..."
+    ></textarea>
 
-<p>
-Para usar a inteligência artificial, conecte sua conta Pollinations.
-Você continuará no controle do seu orçamento e da autorização.
-</p>
+    <div class="photo-box">
 
-<button
-class="connectButton"
-onclick="startLogin()">
-🚀 Conectar agora
-</button>
+      <div class="badge">
+        📎 Foto de referência (opcional)
+      </div>
 
-<button
-class="closeButton"
-onclick="closeConnect()">
-Cancelar
-</button>
+      <input
+        type="file"
+        id="photo"
+        accept="image/*"
+      >
 
-</div>
+      <img id="preview" alt="Prévia da imagem">
+
+    </div>
+
+    <div class="buttons">
+
+      <button
+        class="generate"
+        id="generate"
+      >
+        ✨ Criar comando
+      </button>
+
+      <button
+        class="clear"
+        id="clear"
+      >
+        🗑️ Limpar
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="title">
+      3️⃣ Comando pronto
+    </div>
+
+    <div
+      id="result"
+      class="result empty"
+    >
+      Seu comando profissional aparecerá aqui.
+    </div>
+
+    <button
+      class="copy"
+      id="copy"
+    >
+      📋 Copiar comando
+    </button>
+
+    <button
+      class="install"
+      id="install"
+    >
+      📱 Instalar Criador IA
+    </button>
+
+    <div class="info">
+      Copie o comando e use em uma ferramenta de inteligência artificial para gerar seu conteúdo.
+    </div>
+
+  </div>
+
+  <div class="status" id="status">
+    Criador IA pronto.
+  </div>
 
 </div>
 
 
 <script>
 
-/* =========================================
-   CONFIGURAÇÃO
-========================================= */
+let currentMode = "imagem";
 
-const CLIENT_ID =
-"pk_e3dlTjF2KpyiLMWx";
+const modeButtons = document.querySelectorAll(".mode");
+const idea = document.getElementById("idea");
+const result = document.getElementById("result");
+const photo = document.getElementById("photo");
+const preview = document.getElementById("preview");
+const installButton = document.getElementById("install");
+const statusText = document.getElementById("status");
 
-const REDIRECT_URI =
-"https://dicasdecursosonlineparamelhora-source.github.io/CriadorIA/";
 
-
-/* =========================================
-   ELEMENTOS
-========================================= */
-
-const promptInput =
-document.getElementById("prompt");
-
-const chat =
-document.getElementById("chat");
-
-const welcome =
-document.getElementById("welcome");
-
-const status =
-document.getElementById("status");
-
-const file =
-document.getElementById("file");
-
-const filePreview =
-document.getElementById("filePreview");
-
-let currentMode = "chat";
-
-let selectedFile = null;
-
-let accessToken = null;
-
-
-/* =========================================
-   PKCE
-========================================= */
-
-function randomString(length=64){
-
-const chars =
-"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
-
-let result="";
-
-const values =
-new Uint8Array(length);
-
-crypto.getRandomValues(values);
-
-for(let i=0;i<length;i++){
-
-result +=
-chars[values[i] % chars.length];
-
-}
-
-return result;
-
-}
-
-
-function base64url(buffer){
-
-return btoa(
-String.fromCharCode(
-...new Uint8Array(buffer)
-)
-)
-.replace(/\+/g,"-")
-.replace(/\//g,"_")
-.replace(/=/g,"");
-
-}
-
-
-async function sha256(text){
-
-const data =
-new TextEncoder().encode(text);
-
-return crypto.subtle.digest(
-"SHA-256",
-data
-);
-
-}
-
-
-/* =========================================
-   CONECTAR
-========================================= */
-
-function openConnect(){
-
-document.getElementById("connect").style.display =
-"flex";
-
-}
-
-
-function closeConnect(){
-
-document.getElementById("connect").style.display =
-"none";
-
-}
-
-
-async function startLogin(){
-
-if(!CLIENT_ID ||
-CLIENT_ID.includes("COLE_")){
-
-alert(
-"Primeiro coloque sua nova App Key no código."
-);
-
-return;
-
-}
-
-const verifier =
-randomString();
-
-const challenge =
-base64url(
-await sha256(verifier)
-);
-
-const state =
-randomString(32);
-
-sessionStorage.setItem(
-"pkce_verifier",
-verifier
-);
-
-sessionStorage.setItem(
-"oauth_state",
-state
-);
-
-const params =
-new URLSearchParams({
-
-response_type:"code",
-
-client_id:CLIENT_ID,
-
-redirect_uri:REDIRECT_URI,
-
-scope:"profile usage",
-
-state:state,
-
-code_challenge:challenge,
-
-code_challenge_method:"S256",
-
-expiry:"7"
-
-});
-
-
-window.location.href =
-"https://enter.pollinations.ai/authorize?"
-+params.toString();
-
-}
-
-
-/* =========================================
-   RETORNO DO LOGIN
-========================================= */
-
-async function handleCallback(){
-
-const params =
-new URLSearchParams(
-window.location.search
-);
-
-const code =
-params.get("code");
-
-const state =
-params.get("state");
-
-if(!code)
-return;
-
-const savedState =
-sessionStorage.getItem(
-"oauth_state"
-);
-
-if(!state ||
-state !== savedState){
-
-alert(
-"Erro de segurança na autorização."
-);
-
-return;
-
-}
-
-const verifier =
-sessionStorage.getItem(
-"pkce_verifier"
-);
-
-try{
-
-status.textContent =
-"🟡 Conectando...";
-
-const response =
-await fetch(
-"https://enter.pollinations.ai/api/oauth/token",
-{
-
-method:"POST",
-
-headers:{
-"Content-Type":
-"application/x-www-form-urlencoded"
-},
-
-body:new URLSearchParams({
-
-grant_type:
-"authorization_code",
-
-code:code,
-
-client_id:
-CLIENT_ID,
-
-redirect_uri:
-REDIRECT_URI,
-
-code_verifier:
-verifier
-
-})
-
-}
-);
-
-const data =
-await response.json();
-
-if(!response.ok){
-
-throw new Error(
-data.error ||
-"Não foi possível autorizar."
-);
-
-}
-
-accessToken =
-data.access_token;
-
-sessionStorage.setItem(
-"criador_ia_token",
-accessToken
-);
-
-sessionStorage.removeItem(
-"pkce_verifier"
-);
-
-sessionStorage.removeItem(
-"oauth_state"
-);
-
-window.history.replaceState(
-{},
-document.title,
-REDIRECT_URI
-);
-
-status.textContent =
-"🟢 IA conectada";
-
-welcome.style.display =
-"none";
-
-addAIMessage(
-"✅ IA conectada! Agora você pode pedir para criar uma imagem, vídeo, texto ou áudio."
-);
-
-}catch(error){
-
-console.error(error);
-
-status.textContent =
-"🔴 Erro";
-
-addAIMessage(
-"❌ Não consegui conectar à IA: "
-+error.message
-);
-
-}
-
-}
-
-
-/* =========================================
-   RECUPERAR TOKEN
-========================================= */
-
-function loadToken(){
-
-const token =
-sessionStorage.getItem(
-"criador_ia_token"
-);
-
-if(token){
-
-accessToken =
-token;
-
-status.textContent =
-"🟢 IA conectada";
-
-welcome.style.display =
-"none";
-
-}
-
-}
-
-
-/* =========================================
-   MENSAGENS
-========================================= */
-
-function addUserMessage(text){
-
-welcome.style.display =
-"none";
-
-const message =
-document.createElement("div");
-
-message.className =
-"message user";
-
-const bubble =
-document.createElement("div");
-
-bubble.className =
-"bubble";
-
-bubble.textContent =
-text;
-
-message.appendChild(bubble);
-
-chat.appendChild(message);
-
-scrollBottom();
-
-}
-
-
-function addAIMessage(text){
-
-const message =
-document.createElement("div");
-
-message.className =
-"message ai";
-
-const bubble =
-document.createElement("div");
-
-bubble.className =
-"bubble";
-
-bubble.textContent =
-text;
-
-message.appendChild(bubble);
-
-chat.appendChild(message);
-
-scrollBottom();
-
-}
-
-
-/* =========================================
-   RESULTADO
-========================================= */
-
-function createCreation(){
-
-const message =
-document.createElement("div");
-
-message.className =
-"message ai";
-
-const bubble =
-document.createElement("div");
-
-bubble.className =
-"bubble";
-
-const box =
-document.createElement("div");
-
-box.className =
-"creation";
-
-box.innerHTML = `
-
-<div class="creation-title">
-✨ Resultado da criação
-</div>
-
-<div class="creation-content">
-
-<div class="loading">
-
-<div class="spinner"></div>
-
-<div>
-Gerando...
-</div>
-
-</div>
-
-</div>
-
-`;
-
-bubble.appendChild(box);
-
-message.appendChild(bubble);
-
-chat.appendChild(message);
-
-scrollBottom();
-
-return box;
-
-}
-
-
-/* =========================================
-   GERAR IMAGEM
-========================================= */
-
-async function generateImage(prompt){
-
-const box =
-createCreation();
-
-const content =
-box.querySelector(
-".creation-content"
-);
-
-try{
-
-const encoded =
-encodeURIComponent(prompt);
-
-const url =
-"https://gen.pollinations.ai/image/"
-+encoded
-+"?model=flux";
-
-const response =
-await fetch(url,{
-
-headers:{
-"Authorization":
-"Bearer "+accessToken
-}
-
-});
-
-if(!response.ok){
-
-throw new Error(
-"Erro HTTP "
-+response.status
-);
-
-}
-
-const blob =
-await response.blob();
-
-const imageUrl =
-URL.createObjectURL(blob);
-
-content.innerHTML = "";
-
-const img =
-document.createElement("img");
-
-img.src =
-imageUrl;
-
-content.appendChild(img);
-
-const actions =
-document.createElement("div");
-
-actions.className =
-"actions";
-
-const open =
-document.createElement("a");
-
-open.href =
-imageUrl;
-
-open.target =
-"_blank";
-
-open.textContent =
-"🔎 Abrir";
-
-open.style.background =
-"#182238";
-
-open.style.padding =
-"11px";
-
-open.style.borderRadius =
-"12px";
-
-open.style.color =
-"white";
-
-const save =
-document.createElement("a");
-
-save.href =
-imageUrl;
-
-save.download =
-"criador-ia.png";
-
-save.textContent =
-"⬇️ Salvar";
-
-save.style.background =
-"#765cff";
-
-save.style.padding =
-"11px";
-
-save.style.borderRadius =
-"12px";
-
-save.style.color =
-"white";
-
-actions.appendChild(open);
-
-actions.appendChild(save);
-
-box.appendChild(actions);
-
-}catch(error){
-
-console.error(error);
-
-content.innerHTML = `
-
-<div class="loading">
-
-❌ Não foi possível gerar a imagem.
-
-<br><br>
-
-${error.message}
-
-</div>
-
-`;
-
-}
-
-}
-
-
-/* =========================================
-   CHAT
-========================================= */
-
-async function generateText(prompt){
-
-const box =
-createCreation();
-
-const content =
-box.querySelector(
-".creation-content"
-);
-
-try{
-
-const response =
-await fetch(
-"https://gen.pollinations.ai/v1/chat/completions",
-{
-
-method:"POST",
-
-headers:{
-
-"Authorization":
-"Bearer "+accessToken,
-
-"Content-Type":
-"application/json"
-
-},
-
-body:JSON.stringify({
-
-model:
-"openai/gpt-5.4-nano",
-
-messages:[
-
-{
-role:"user",
-content:prompt
-}
-
-]
-
-})
-
-}
-);
-
-const data =
-await response.json();
-
-if(!response.ok){
-
-throw new Error(
-data.error?.message ||
-"Erro na IA"
-);
-
-}
-
-const text =
-data.choices?.[0]?.message?.content ||
-"Sem resposta.";
-
-content.innerHTML = "";
-
-const div =
-document.createElement("div");
-
-div.style.padding =
-"18px";
-
-div.style.whiteSpace =
-"pre-wrap";
-
-div.textContent =
-text;
-
-content.appendChild(div);
-
-}catch(error){
-
-content.innerHTML = `
-
-<div class="loading">
-
-❌ Erro:
-
-<br><br>
-
-${error.message}
-
-</div>
-
-`;
-
-}
-
-}
-
-
-/* =========================================
-   EXECUTAR
-========================================= */
-
-document
-.getElementById("send")
-.onclick = async () => {
-
-const text =
-promptInput.value.trim();
-
-if(!text)
-return;
-
-if(!accessToken){
-
-openConnect();
-
-return;
-
-}
-
-addUserMessage(text);
-
-promptInput.value = "";
-
-
-if(currentMode === "image"){
-
-await generateImage(text);
-
-return;
-
-}
-
-
-await generateText(text);
-
-};
-
-
-/* =========================================
-   ENTER
-========================================= */
-
-promptInput.addEventListener(
-"keydown",
-event => {
-
-if(
-event.key === "Enter" &&
-!event.shiftKey
-){
-
-event.preventDefault();
-
-document
-.getElementById("send")
-.click();
-
-}
-
-});
-
-
-/* =========================================
+/* =========================
    MODOS
-========================================= */
+========================= */
 
-document
-.querySelectorAll(".tools button")
-.forEach(button => {
+modeButtons.forEach(button => {
 
-button.onclick = () => {
+  button.addEventListener("click", () => {
 
-document
-.querySelectorAll(".tools button")
-.forEach(b =>
-b.classList.remove("active")
-);
+    modeButtons.forEach(b => {
+      b.classList.remove("active");
+    });
 
-button.classList.add("active");
+    button.classList.add("active");
 
-currentMode =
-button.dataset.mode;
+    currentMode = button.dataset.mode;
 
-const placeholders = {
+    updatePlaceholder();
 
-chat:
-"Converse com a IA...",
-
-image:
-"Descreva a imagem que você quer criar...",
-
-video:
-"Descreva o vídeo que você quer criar...",
-
-text:
-"Digite o texto que você quer criar...",
-
-audio:
-"Descreva o áudio que você quer criar..."
-
-};
-
-promptInput.placeholder =
-placeholders[currentMode];
-
-promptInput.focus();
-
-};
+  });
 
 });
 
 
-/* =========================================
-   ARQUIVO
-========================================= */
+/* =========================
+   PLACEHOLDER
+========================= */
+
+function updatePlaceholder(){
+
+  const texts = {
+
+    imagem:
+    "Exemplo: quero uma imagem de um homem jogando Street Fighter 6 em um quarto gamer...",
+
+    foto:
+    "Exemplo: quero uma foto profissional de um homem em frente a um carro esportivo...",
+
+    video:
+    "Exemplo: quero um vídeo de um personagem caminhando em uma cidade futurista...",
+
+    texto:
+    "Exemplo: quero um anúncio para divulgar meu serviço...",
+
+    audio:
+    "Exemplo: quero uma narração masculina profissional apresentando meu produto...",
+
+    logo:
+    "Exemplo: quero um logo moderno para uma empresa de tecnologia chamada X..."
+
+  };
+
+  idea.placeholder = texts[currentMode];
+
+}
+
+
+/* =========================
+   FOTO
+========================= */
+
+photo.addEventListener("change", () => {
+
+  const file = photo.files[0];
+
+  if(!file){
+
+    preview.style.display = "none";
+    preview.src = "";
+
+    return;
+  }
+
+  const url = URL.createObjectURL(file);
+
+  preview.src = url;
+  preview.style.display = "block";
+
+});
+
+
+/* =========================
+   GERAR
+========================= */
 
 document
-.getElementById("attach")
-.onclick = () => {
-
-file.click();
-
-};
+.getElementById("generate")
+.addEventListener("click", generatePrompt);
 
 
-file.onchange = () => {
+function generatePrompt(){
 
-const f =
-file.files[0];
+  const userIdea = idea.value.trim();
 
-if(!f)
-return;
+  if(!userIdea){
 
-selectedFile =
-f;
+    alert("Digite primeiro o que você quer criar.");
 
-filePreview.style.display =
-"block";
+    idea.focus();
 
-filePreview.innerHTML = "";
+    return;
+  }
 
-const url =
-URL.createObjectURL(f);
+  let prompt = "";
 
-if(
-f.type.startsWith("image/")
-){
 
-const img =
-document.createElement("img");
+  if(currentMode === "imagem"){
 
-img.src =
-url;
+    prompt =
+`Crie uma imagem de alta qualidade baseada nesta ideia:
 
-filePreview.appendChild(img);
+${userIdea}
+
+Estilo visual profissional, composição equilibrada, iluminação cinematográfica, detalhes nítidos, alta definição, aparência realista e visual impactante.
+
+Composição bem organizada, profundidade de campo adequada, cores harmoniosas e acabamento profissional.
+
+Não adicionar elementos que não tenham relação com a ideia principal.
+
+Evitar deformações, objetos duplicados, mãos deformadas, dedos extras, rostos distorcidos e elementos incoerentes.`;
+
+  }
+
+
+  if(currentMode === "foto"){
+
+    prompt =
+`Crie uma fotografia extremamente realista baseada nesta ideia:
+
+${userIdea}
+
+Fotografia profissional, aparência natural, iluminação realista, textura natural da pele, detalhes precisos, proporções corretas, profundidade de campo cinematográfica e alta definição.
+
+Composição fotográfica profissional, enquadramento equilibrado e aparência de fotografia feita com câmera profissional.
+
+Evitar aparência artificial, deformações, mãos deformadas, dedos extras, olhos assimétricos e elementos distorcidos.`;
+
+  }
+
+
+  if(currentMode === "video"){
+
+    prompt =
+`Crie um vídeo cinematográfico baseado nesta ideia:
+
+${userIdea}
+
+Movimentos naturais e fluidos, câmera cinematográfica, iluminação profissional, composição visual detalhada, profundidade de campo realista e aparência de produção profissional.
+
+Os movimentos dos personagens devem ser naturais e coerentes.
+
+A câmera deve acompanhar a ação de maneira suave e cinematográfica.
+
+Manter consistência visual dos personagens e do ambiente durante todo o vídeo.
+
+Evitar movimentos bruscos, deformações e mudanças desnecessárias nos personagens.`;
+
+  }
+
+
+  if(currentMode === "texto"){
+
+    prompt =
+`Crie um texto profissional baseado nesta ideia:
+
+${userIdea}
+
+Escreva em português do Brasil, com linguagem clara, natural e envolvente.
+
+Organize o conteúdo de maneira profissional.
+
+Utilize título, introdução objetiva, desenvolvimento bem estruturado e conclusão adequada.
+
+Evite repetições e informações desnecessárias.
+
+O resultado deve estar pronto para ser publicado ou utilizado pelo usuário.`;
+
+  }
+
+
+  if(currentMode === "audio"){
+
+    prompt =
+`Crie um roteiro profissional para áudio baseado nesta ideia:
+
+${userIdea}
+
+Voz natural e profissional, ritmo agradável, boa dicção e entonação adequada.
+
+O texto deve soar natural quando falado em voz alta.
+
+Use pausas nos momentos apropriados e destaque as informações mais importantes.
+
+O resultado deve estar pronto para gravação ou geração de voz por inteligência artificial.`;
+
+  }
+
+
+  if(currentMode === "logo"){
+
+    prompt =
+`Crie um conceito de logotipo profissional baseado nesta ideia:
+
+${userIdea}
+
+Design moderno, memorável, profissional e visualmente equilibrado.
+
+Utilize formas simples e reconhecíveis, boa hierarquia visual e composição limpa.
+
+O logotipo deve funcionar tanto em tamanho grande quanto pequeno.
+
+Fundo limpo, acabamento profissional e aparência adequada para marca comercial.`;
+
+  }
+
+
+  if(photo.files.length > 0){
+
+    prompt += `
+
+IMPORTANTE:
+
+Utilize a foto de referência enviada pelo usuário como referência visual.
+
+Preserve as características principais da pessoa ou objeto da referência.
+
+Não alterar desnecessariamente identidade visual, proporções ou características principais.`;
+
+  }
+
+
+  result.classList.remove("empty");
+
+  result.textContent = prompt;
 
 }
 
-if(
-f.type.startsWith("video/")
-){
 
-const video =
-document.createElement("video");
+/* =========================
+   COPIAR
+========================= */
 
-video.src =
-url;
+document
+.getElementById("copy")
+.addEventListener("click", async () => {
 
-video.controls =
-true;
+  const text = result.textContent;
 
-filePreview.appendChild(video);
+  if(
+    !text ||
+    text === "Seu comando profissional aparecerá aqui."
+  ){
 
-}
+    alert("Primeiro crie um comando.");
 
-};
+    return;
+  }
+
+  try{
+
+    await navigator.clipboard.writeText(text);
+
+    alert("✅ Comando copiado!");
+
+  }catch(error){
+
+    const area = document.createElement("textarea");
+
+    area.value = text;
+
+    document.body.appendChild(area);
+
+    area.select();
+
+    document.execCommand("copy");
+
+    area.remove();
+
+    alert("✅ Comando copiado!");
+
+  }
+
+});
 
 
-/* =========================================
+/* =========================
    LIMPAR
-========================================= */
+========================= */
 
 document
 .getElementById("clear")
-.onclick = () => {
+.addEventListener("click", () => {
 
-promptInput.value = "";
+  idea.value = "";
 
-file.value = "";
+  photo.value = "";
 
-filePreview.style.display =
-"none";
+  preview.src = "";
 
-filePreview.innerHTML = "";
+  preview.style.display = "none";
 
-chat.innerHTML = "";
+  result.textContent =
+  "Seu comando profissional aparecerá aqui.";
 
-chat.appendChild(welcome);
+  result.classList.add("empty");
 
-welcome.style.display =
-"block";
-
-};
+});
 
 
-/* =========================================
-   MICROFONE
-========================================= */
+/* =========================
+   PWA
+========================= */
 
-document
-.getElementById("mic")
-.onclick = () => {
+if("serviceWorker" in navigator){
 
-const Recognition =
-window.SpeechRecognition ||
-window.webkitSpeechRecognition;
+  window.addEventListener("load", () => {
 
-if(!Recognition){
+    navigator.serviceWorker
+    .register("./sw.js")
+    .then(() => {
 
-alert(
-"Reconhecimento de voz não disponível."
-);
+      statusText.textContent =
+      "Criador IA pronto para uso.";
 
-return;
+    })
+    .catch(() => {
+
+      statusText.textContent =
+      "Criador IA funcionando normalmente.";
+
+    });
+
+  });
 
 }
 
-const recognition =
-new Recognition();
 
-recognition.lang =
-"pt-BR";
+/* =========================
+   INSTALAÇÃO
+========================= */
 
-recognition.start();
+let deferredPrompt = null;
 
-recognition.onresult =
-event => {
+window.addEventListener("beforeinstallprompt", event => {
 
-promptInput.value =
-event.results[0][0].transcript;
+  event.preventDefault();
 
-};
+  deferredPrompt = event;
 
-};
+  installButton.style.display = "block";
+
+});
 
 
-/* =========================================
-   INICIALIZAÇÃO
-========================================= */
+installButton.addEventListener("click", async () => {
 
-handleCallback();
+  if(!deferredPrompt){
 
-loadToken();
+    alert(
+      "No Android, procure a opção 'Adicionar à tela inicial' no menu do navegador."
+    );
+
+    return;
+  }
+
+  deferredPrompt.prompt();
+
+  await deferredPrompt.userChoice;
+
+  deferredPrompt = null;
+
+  installButton.style.display = "none";
+
+});
+
+
+window.addEventListener("appinstalled", () => {
+
+  installButton.style.display = "none";
+
+  statusText.textContent =
+  "✅ Criador IA instalado.";
+
+});
+
+
+/* =========================
+   INICIAR
+========================= */
+
+updatePlaceholder();
 
 </script>
 
